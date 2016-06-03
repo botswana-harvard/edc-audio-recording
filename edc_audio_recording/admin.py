@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
+
 from edc_base.modeladmin.mixins import ModelAdminChangelistModelButtonMixin
 
 
