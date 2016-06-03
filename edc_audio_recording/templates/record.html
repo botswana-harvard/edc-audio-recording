@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block topbar_search %}{% endblock %}
+
+{% block extra-scripts%}
+    <script src="{% static "edc_audio_recording/js/audio.js" %}"></script>
+{% endblock extra-scripts %}
+
+{% block main %}
+{% csrf_token %}
+
+<!--  all below the top bar and above the footer -->
+
+<div align="center" class="well">
+<h3>{{ verbose_name|title }} {{ name }}</h3>
+<span style="background-color:transparent; border-color:transparent;" class="flaticon-microphone"></span>
+</br>
+
+<!-- Trigger the modal with a button -->
+<button id="btn-record" type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">Click to Record</button>
+</br>
+</br>
+
+<button id="btn-cancel" role="button">Cancel</button>
+
+
+<div class="alert alert-warning" id="alert-saving" style="display:none">
+  <strong>Saving ...</strong> Please wait. Your recording is being saved. This will take a few minutes.
+</div>
+
+<div class="alert alert-success" id="alert-saved" style="display:none">
+  <a href="{% url recording_changelist %}?q={{ name }}" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Success!</strong> Your recording has been saved.
+</div>
+</div>
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Recording for Interview {{ name }} in Session</h4>
+      </div>
+      <div class="modal-body">
+        <p>Your recording is in session
+        </br>Click "Stop Recording" below to end the recording.
+        </br>
+        </br>Status: <span style="text-align:left;" id="audio-status"></span>
+        </br><span style="text-align:left;" id="audio-duration"></span>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-stop" type="button" class="btn btn-default" data-dismiss="modal">Stop Recording</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+$(document).ready(function() {
+    $("#btn-record").click(function(e) {
+        startRecording(e);
+    });
+
+    $("#btn-stop").click(function(e) {
+        stopRecording(e);
+    });
+    $("#btn-cancel").click(function(){
+        window.location.href='{% url redirect_changelist %}?q={{ name }}';
+    });    
+});
+
+</script>
+
+{% endblock %}
