@@ -11,6 +11,7 @@ from django.utils import timezone
 
 RECORDING = 'recording'
 READY = 'ready'
+NOT_AVAILABLE = 'not_available'
 
 
 class AudioError(Exception):
@@ -32,19 +33,21 @@ class Audio(object):
         self.device = 0
         self.filename = None
         self.recording_time = None
-        try:
-            self.samplerate = int(sd.query_devices(self.device, 'input')['default_samplerate'])
-        except sd.PortAudioError:
-            self.samplerate = None
-            self.available = False
         self.start_datetime = None
         self.start_time = 0
-        self.status = READY
         self.stop_datetime = None
         self.subtype = None
+        try:
+            self.samplerate = int(sd.query_devices(self.device, 'input')['default_samplerate'])
+            self.device_available = True
+            self.status = READY
+        except (sd.PortAudioError, ValueError):
+            self.samplerate = None
+            self.device_available = False
+            self.status = NOT_AVAILABLE
 
     def record(self, filename, samplerate=None, block_duration=None):
-        if not self.available:
+        if not self.device_available:
             return False
         else:
             self.start_datetime = timezone.now()
@@ -63,8 +66,8 @@ class Audio(object):
         return True
 
     def record_forever(self, filename, samplerate=None):
-        """example from sounddevice"""
-        if self.available:
+        """example from sounddevice, experimental"""
+        if self.device_available:
             self.filename = filename.split('.')[0] + '.ogg'
             filename = self.filename
             samplerate = samplerate or self.samplerate
@@ -100,45 +103,57 @@ class Audio(object):
 
     @property
     def duration(self):
-        try:
-            s = (timezone.now() - self.start_datetime).seconds
-            hours, remainder = divmod(s, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            return '{0:02d}:{1:02d}:{2:02d}'.format(hours, minutes, seconds)
-        except TypeError:
-            return '00:00:00'
+        if self.device_available:
+            try:
+                s = (timezone.now() - self.start_datetime).seconds
+                hours, remainder = divmod(s, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                return '{0:02d}:{1:02d}:{2:02d}'.format(hours, minutes, seconds)
+            except TypeError:
+                return '00:00:00'
+        return self.device_available
 
     def stop(self):
-        if self.status != RECORDING:
-            raise AudioError('Cannot stop. Device is not recording. Current status is \'{}\''.format(self.status))
-        else:
-            sd.stop()
-            self.stop_datetime = timezone.now()
-            self.recording_time = self.duration
-            self.status = 'done'
+        if self.device_available:
+            if self.status != RECORDING:
+                raise AudioError('Cannot stop. Device is not recording. Current status is \'{}\''.format(self.status))
+            else:
+                sd.stop()
+                self.stop_datetime = timezone.now()
+                self.recording_time = self.duration
+                self.status = 'done'
+        return self.device_available
 
     def save(self, compress=None, reset=None):
-        reset = True if reset is None else False
-        if self.data.size > 0:
-            self.stop()
-            if compress:
-                np.savez_compressed(self.filename, self.data)
-            else:
-                np.savez(self.filename, self.data)
-        if reset:
-            self.reset()
+        if self.device_available:
+            reset = True if reset is None else False
+            if self.data.size > 0:
+                self.stop()
+                if compress:
+                    np.savez_compressed(self.filename, self.data)
+                else:
+                    np.savez(self.filename, self.data)
+            if reset:
+                self.reset()
+        return self.device_available
 
     def reset(self):
-        self.recording_time = self.duration
-        self.data = np.ndarray(0, dtype='float32')
-        self.status = READY
-        self.start_time = None
-        self.filename = None
+        if self.device_available:
+            self.recording_time = self.duration
+            self.data = np.ndarray(0, dtype='float32')
+            self.status = READY
+            self.start_time = None
+            self.filename = None
+        return self.device_available
 
     def play(self):
-        sd.play(self.data, self.samplerate)
+        if self.device_available:
+            sd.play(self.data, self.samplerate)
+        return self.device_available
 
     def load(self, filename):
-        self.filename = filename
-        self.status = 'file_loaded'
-        self.data = np.load(filename).items()[0][1]
+        if self.device_available:
+            self.filename = filename
+            self.status = 'file_loaded'
+            self.data = np.load(filename).items()[0][1]
+        return self.device_available

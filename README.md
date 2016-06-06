@@ -1,2 +1,3 @@
 # edc-audio-recording
-Add audi recording for interviews and group discussions
+
+Add audio recording for interviews and group discussions.
