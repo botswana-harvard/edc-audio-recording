@@ -1,4 +1,2 @@
-recursive-include bcpp_interview/templates *
-recursive-include bcpp_interview/static *
-recursive-include audio_recording/templates *
-recursive-include audio_recording/static *
+recursive-include edc_audio_recording/templates *
+recursive-include edc_audio_recording/static *
