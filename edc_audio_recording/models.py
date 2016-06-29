@@ -9,6 +9,12 @@ def upload_folder():
     return str(settings.UPLOAD_FOLDER)
 
 
+class RecordingManager(models.Manager):
+
+    def get_by_natural_key(self, sound_filename):
+        return self.get(sound_filename=sound_filename)
+
+
 class RecordingModelMixin(models.Model):
 
     report_datetime = models.DateTimeField(
@@ -50,6 +56,8 @@ class RecordingModelMixin(models.Model):
     )
 
     played = models.BooleanField(default=False, editable=False)
+
+    objects = RecordingManager()
 
     def __str__(self):
         return 'Recording {}'.format(self.label)
