@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from .admin import recording_admin
-from .views import RecordView, PlaybackView
+from .views import RecordView, PlaybackView, HomeView
 
 
 urlpatterns = [
@@ -12,5 +12,5 @@ urlpatterns = [
         '(?P<pk>[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12})/',
         PlaybackView.as_view(), name='play'),
     url('^admin/', recording_admin.urls),
-    url('^', recording_admin.urls),
+    url('^', HomeView.as_view(), name='edc_audio_recording_home_url'),
 ]

@@ -5,9 +5,10 @@ from django.apps import AppConfig
 from django.core.management.color import color_style
 
 
-class AudioRecordingAppConfig(AppConfig):
+class EdcAudioRecordingAppConfig(AppConfig):
     name = 'edc_audio_recording'
     verbose_name = 'Audio Recordings'
+    audio_file_extensions = ['.npz']
 
     def ready(self):
         style = color_style()

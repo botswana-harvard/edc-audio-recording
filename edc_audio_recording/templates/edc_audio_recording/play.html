@@ -1,0 +1,24 @@
+{% extends "edc_base/base.html" %}
+{% load staticfiles %}
+{% block topbar_search %}{% endblock %}
+
+{% block extra-scripts%}
+    <script src="{% static "edc_audio_recording/js/audio.js" %}"></script>
+{% endblock extra-scripts %}
+
+{% block main %}
+{% csrf_token %}
+
+<!--  all below the top bar and above the footer -->
+
+<div align="center" class="well">
+<h3>{{ verbose_name|title }} {{ name }}</h3>
+
+ <audio controls>
+  <source src="{{ obj.file_name_ogg }}" type="audio/mpeg">
+  <source src="{{ obj.file_name_mp3 }}" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio> 
+
+</div>
+{% endblock main%}

@@ -12,7 +12,7 @@ from django.views.generic.base import TemplateView
 
 class PlaybackView(TemplateView):
 
-    template_name = None
+    template_name = 'edc_audio_recording/play.html'
 
     def __init__(self):
         self._filename = None
@@ -25,6 +25,11 @@ class PlaybackView(TemplateView):
         context.update(
             title=settings.PROJECT_TITLE,
             project_name=settings.PROJECT_TITLE,
+            is_popup=True,
+            name=self.model_instance.reference,
+            verbose_name=self.model_instance._meta.verbose_name,
+            pk=self.kwargs.get('pk'),
+            filename=self.filename,
         )
         return context
 

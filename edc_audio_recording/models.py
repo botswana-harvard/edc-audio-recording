@@ -1,8 +1,13 @@
+import os
+import numpy as np
+import soundfile as sf
+
 from humanize import naturalsize
 
 from django.conf import settings
 from django.db import models
 from django_crypto_fields.fields.encrypted_text_field import EncryptedTextField
+from django.core.urlresolvers import reverse
 
 
 def upload_folder():
@@ -71,8 +76,49 @@ class RecordingModelMixin(models.Model):
     def natural_key(self):
         return self.sound_filename
 
+    def get_absolute_url(self):
+        return reverse(
+            'recording_admin:' + self._meta.app_label + '_' + self._meta.model_name + '_change',
+            args=[str(self.id)])
+
     def filesize(self):
         return naturalsize(self.sound_filesize, binary=True)
+
+    @property
+    def file_exists(self):
+        """Return true if file exists."""
+        sound_file_exists = False
+        if self.sound_filename:
+            sound_file_exists = os.path.isfile(self.sound_file_current_path)
+        return sound_file_exists
+
+    @property
+    def file_path(self):
+        """Return current path based on this app's upload folder."""
+        return os.path.join(upload_folder(), self.sound_filename.split('/')[-1:][0])
+
+    @property
+    def file_name(self):
+        return self.sound_filename.split('/')[-1:][0]
+
+    def create_wav_file(self):
+        if not os.path.isfile(self.wav_file_path):
+            if os.path.isfile(self.file_path):
+                sf.write(self.wav_file_path, np.load(self.file_path)['arr_0'], samplerate=44100)
+
+    @property
+    def wav_file_path(self):
+        """Return current path based on this app's upload folder."""
+        return os.path.join(upload_folder(), self.wav_file_name)
+
+    @property
+    def wav_file_name(self):
+        return self.file_name.split('.')[0] + '.wav'
+
+    @property
+    def wav_file_exists(self):
+        """Return true if file exists."""
+        return os.path.isfile(self.wav_file_path)
 
     class Meta:
         abstract = True

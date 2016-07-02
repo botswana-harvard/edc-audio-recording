@@ -17,7 +17,7 @@ audio = Audio()
 
 
 class RecordView(TemplateView):
-    template_name = 'record.html'
+    template_name = 'edc_audio_recording/record.html'
 
     def __init__(self):
         self._filename = None
