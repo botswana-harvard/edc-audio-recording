@@ -7,6 +7,7 @@
 {% endblock extra-scripts %}
 
 {% block main %}
+<div class="container">
 {% csrf_token %}
 
 <!--  all below the top bar and above the footer -->
@@ -60,7 +61,7 @@
   </div>
 </div>
 
-
+</div>
 <script>
 $(document).ready(function() {
     $("#btn-record").click(function(e) {
