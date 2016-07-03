@@ -11,12 +11,14 @@ from django.http.response import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
+from edc_base.views.edc_base_view_mixin import EdcBaseViewMixin
+
 from ..audio import Audio, RECORDING, READY, AudioError
 
 audio = Audio()
 
 
-class RecordView(TemplateView):
+class RecordView(EdcBaseViewMixin, TemplateView):
     template_name = 'edc_audio_recording/record.html'
 
     def __init__(self):
