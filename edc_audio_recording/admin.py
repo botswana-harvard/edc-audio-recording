@@ -10,7 +10,7 @@ class RecordingAdminSite(AdminSite):
     site_header = 'Audio Recordings'
     site_title = 'Audio Recordings'
     index_title = 'Audio Recordings Admin'
-    site_url = '/recording/'
+    site_url = '/edc-audio-recording/'
 
 recording_admin = RecordingAdminSite(name='recording_admin')
 

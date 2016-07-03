@@ -12,5 +12,5 @@ urlpatterns = [
         '(?P<pk>[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12})/',
         PlaybackView.as_view(), name='play'),
     url('^admin/', recording_admin.urls),
-    url('^', HomeView.as_view(), name='edc_audio_recording_home_url'),
+    url('^', HomeView.as_view(), name='edc-audio-recording-home-url'),
 ]
