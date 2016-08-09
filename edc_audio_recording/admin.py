@@ -19,7 +19,7 @@ class ModelAdminAudioPlaybackMixin(object):
 
     def play(self, obj):
         kwargs = {'app_label': obj._meta.app_label, 'model_name': obj._meta.model_name, 'pk': obj.pk}
-        url = reverse('play', kwargs=kwargs)
+        url = reverse('edc-audio-recording:play', kwargs=kwargs)
         return format_html(
             '<button id="play-{id}" onclick="return startPlayback(\'{id}\', \'{url}\');" '
             'class="button">Play</button>', id=obj.pk, url=url)
@@ -27,7 +27,7 @@ class ModelAdminAudioPlaybackMixin(object):
 
     def stop(self, obj):
         kwargs = {'app_label': obj._meta.app_label, 'model_name': obj._meta.model_name, 'pk': obj.pk}
-        url = reverse('play', kwargs=kwargs)
+        url = reverse('edc-audio-recording:play', kwargs=kwargs)
         return format_html(
             '<button id="stop-{id}" onclick="return stopPlayback(\'{id}\', \'{url}\');" '
             'class="button">Stop</button>', id=obj.pk, url=url)
@@ -35,7 +35,7 @@ class ModelAdminAudioPlaybackMixin(object):
 
     def record(self, obj):
         kwargs = {'app_label': obj._meta.app_label, 'model_name': obj._meta.model_name, 'pk': obj.pk}
-        url = reverse('record', kwargs=kwargs)
+        url = reverse('edc-audio-recording:record', kwargs=kwargs)
         return format_html(
             '<a id="record-{id}" href="{url}" '
             'class="button">Record</a>', id=obj.pk, url=url)

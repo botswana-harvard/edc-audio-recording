@@ -37,8 +37,6 @@ class RecordView(EdcBaseViewMixin, TemplateView):
         recording_changelist = 'recording_admin:{}_{}recording_changelist'.format(
             self.model_instance._meta.app_label, self.model_instance._meta.model_name)
         context.update(
-            title=settings.PROJECT_TITLE,
-            project_name=settings.PROJECT_TITLE,
             is_popup=True,
             name=self.model_instance.reference,
             redirect_changelist=redirect_changelist,
