@@ -38,7 +38,7 @@ function startRecording(app_label, model_name, pk){
 	$('#alert-saved').hide();
 	$.ajax({
 		type:'GET',
-		url: Urls['record'](app_label, model_name, pk),
+		url: Urls['edc-audio-recording:record'](app_label, model_name, pk),
 		data:{
 			action:"start_recording",
 		},
@@ -65,7 +65,7 @@ function stopRecording(app_label, model_name, pk){
 	$('#alert-saving').show();
 	$.ajax({
 		type:'GET',
-		url: Urls['record'](app_label, model_name, pk),
+		url: Urls['edc-audio-recording:record'](app_label, model_name, pk),
 		data:{
 			action:"stop_recording",
 		},
@@ -87,7 +87,7 @@ function stopRecording(app_label, model_name, pk){
 
 function poll(app_label, model_name, pk) {
     $.ajax({
-        url: Urls['record'](app_label, model_name, pk),
+        url: Urls['edc-audio-recording:record'](app_label, model_name, pk),
         type: "GET",
         success: function(json) {
 			action:"duration";
