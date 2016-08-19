@@ -32,13 +32,13 @@ function stopPlayback(pk, url) {
 	return true;
 }
 
-function startRecording(e){
-	e.preventDefault();
+function startRecording(app_label, model_name, pk){
+	// e.preventDefault();
 	$('#alert-saving').hide();
 	$('#alert-saved').hide();
 	$.ajax({
 		type:'GET',
-		url:"{% url 'record' app_label model_name pk %}",
+		url: Urls['record'](app_label, model_name, pk),
 		data:{
 			action:"start_recording",
 		},
@@ -53,19 +53,19 @@ function startRecording(e){
 			$("#li-topbar-settings").addClass("disabled");
 			$("#li-topbar-user-profile").addClass("disabled");
 			$("#li-topbar-logout").addClass("disabled");
-			poll();
+			poll(app_label, model_name, pk);
 		}
 	});
 }
 
-function stopRecording(e){
-	e.preventDefault();
+function stopRecording(app_label, model_name, pk){
+	// e.preventDefault();
 	$("#btn-record").prop( "disabled", true );
 	$("#btn-record").text('Saving ...');
 	$('#alert-saving').show();
 	$.ajax({
 		type:'GET',
-		url:"{% url 'record' app_label model_name pk %}",
+		url: Urls['record'](app_label, model_name, pk),
 		data:{
 			action:"stop_recording",
 		},
@@ -85,14 +85,14 @@ function stopRecording(e){
 }
 
 
-function poll() {
+function poll(app_label, model_name, pk) {
     $.ajax({
-        url: "{% url 'record' app_label model_name pk %}",
+        url: Urls['record'](app_label, model_name, pk),
         type: "GET",
         success: function(json) {
 			action:"duration";
             if(json.status == 'recording') {
-        		setTimeout(function() {poll()}, 1000);
+        		setTimeout(function() {poll(app_label, model_name, pk)}, 1000);
         		$("#audio-duration").text(json.recording_time);
         	};
         },

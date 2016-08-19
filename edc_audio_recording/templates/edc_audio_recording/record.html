@@ -65,11 +65,11 @@
 <script>
 $(document).ready(function() {
     $("#btn-record").click(function(e) {
-        startRecording(e);
+        startRecording({{ app_label }}, {{ model_name }}, {{ pk }});
     });
 
     $("#btn-stop").click(function(e) {
-        stopRecording(e);
+        stopRecording({{ app_label }}, {{ model_name }}, {{ pk }});
     });
     $("#btn-cancel").click(function(){
         window.location.href='{% url redirect_changelist %}?q={{ name }}';
