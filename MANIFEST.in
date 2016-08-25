@@ -1,2 +1,5 @@
+include AUTHORS CHANGES README.md LICENCE
 recursive-include edc_audio_recording/templates *
 recursive-include edc_audio_recording/static *
+recursive-exclude example/*
+recursive-exclude etc/*
