@@ -3,7 +3,7 @@ from django.contrib.admin.sites import AdminSite
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 
-from edc_base.modeladmin.mixins import ModelAdminChangelistModelButtonMixin
+from edc_base.modeladmin_mixins import ModelAdminChangelistModelButtonMixin
 
 
 class RecordingAdminSite(AdminSite):
